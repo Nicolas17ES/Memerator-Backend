@@ -5,6 +5,8 @@ const multer = require('multer')
 const path = require('path')
 const cors = require("cors");
 const bodyParser = require('body-parser');
+const fs = require("fs")
+
  
  
 //use express static folder
@@ -89,6 +91,36 @@ app.get("/upload/:originalname", (req, res) => {
 
 });
 
+
+//@type   DELETE
+//route for DELETING image data from DB and public folder
+app.delete("/upload/delete", (req, res) => {
+
+   const deleteQuery = "DELETE from user_images;"
+        db.query(deleteQuery, (err, result) => {
+            if (err) {
+                res.sendStatus(400)
+                throw new Error('Images cant be deleted')
+                
+            } else {
+                console.log('deleted from db')
+                const directory = '/public/images/';
+
+                    fs.readdir(__dirname + directory, (err, files) => {
+                    if (err) throw err;
+
+                    for (const file of files) {
+                        fs.unlink(path.join(__dirname + directory, file), err => {
+                            if (err) throw err;
+                        });
+                    }
+                    });        
+                console.log('all images deleted in server and db')
+                return res.send('deleted images');
+            } 
+        })
+        return true;
+});
 
  
 //create connection
