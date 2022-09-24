@@ -103,7 +103,7 @@ app.delete("/upload/delete", (req, res) => {
                 throw new Error('Images cant be deleted')
                 
             } else {
-                console.log('deleted from db')
+                console.log('deleted from database')
                 const directory = '/public/images/';
 
                     fs.readdir(__dirname + directory, (err, files) => {
